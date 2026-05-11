@@ -16,7 +16,7 @@
       --text: #000000;
       --muted: #555555;
       --line: #d9d9d9;
-      --max: 1120px;
+      --max: 1160px;
     }
     * { box-sizing: border-box; }
     body {
@@ -32,8 +32,8 @@
       font-synthesis-weight: none;
     }
     a { color: inherit; text-decoration: none; }
-    button, input, textarea { font: inherit; }
-    h1, h2, h3, strong, .button, .tab, .brand, .stat-value, .label { font-weight: 500; }
+    button, input, textarea, select { font: inherit; }
+    h1, h2, h3, strong, .button, .tab, .brand, .stat-value, .label, .sample-button { font-weight: 500; }
 
     .shell {
       width: min(calc(100% - 40px), var(--max));
@@ -44,6 +44,7 @@
       position: sticky;
       top: 0;
       background: rgba(255,255,255,.97);
+      z-index: 20;
     }
     .nav-inner {
       min-height: 70px;
@@ -66,13 +67,13 @@
       place-items: center;
       font-size: 14px;
     }
-    .button-row, .tab-row, .inline-row {
+    .button-row, .tab-row, .inline-row, .sample-grid {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
       align-items: center;
     }
-    .button, .tab {
+    .button, .tab, .sample-button {
       min-height: 44px;
       padding: 0 16px;
       display: inline-flex;
@@ -83,13 +84,13 @@
       color: var(--bg);
       cursor: pointer;
     }
-    .button.secondary, .tab.secondary {
+    .button.secondary, .tab.secondary, .sample-button.secondary {
       background: var(--bg);
       color: var(--text);
       border-color: var(--line);
     }
-    .button:hover, .tab:hover { background: var(--bg); color: var(--text); }
-    .button.secondary:hover, .tab.secondary:hover { border-color: var(--text); }
+    .button:hover, .tab:hover, .sample-button:hover { background: var(--bg); color: var(--text); }
+    .button.secondary:hover, .tab.secondary:hover, .sample-button.secondary:hover { border-color: var(--text); }
     .hero {
       padding: 48px 0 28px;
       border-bottom: 1px solid var(--line);
@@ -113,12 +114,12 @@
       font-size: clamp(36px, 6vw, 64px);
       line-height: .96;
       letter-spacing: -0.05em;
-      max-width: 11ch;
+      max-width: 12ch;
     }
     .lead {
       margin: 0;
       color: var(--muted);
-      max-width: 58ch;
+      max-width: 60ch;
       font-size: 18px;
     }
     .stats {
@@ -143,15 +144,13 @@
       border: 1px solid var(--line);
       background: var(--surface);
     }
-    .panel {
-      padding: 20px;
-    }
+    .panel { padding: 20px; }
     .label {
       display: block;
       margin-bottom: 8px;
       font-size: 14px;
     }
-    input[type="text"], input[type="url"], input[type="number"], textarea {
+    input[type="text"], input[type="url"], input[type="number"], textarea, select {
       width: 100%;
       padding: 12px 14px;
       border: 1px solid var(--line);
@@ -164,12 +163,10 @@
       width: 100%;
       padding: 10px 0;
     }
-    .main {
-      padding: 28px 0 72px;
-    }
+    .main { padding: 28px 0 72px; }
     .layout {
       display: grid;
-      grid-template-columns: 1.05fr .95fr;
+      grid-template-columns: 1.15fr .85fr;
       gap: 20px;
       align-items: start;
     }
@@ -190,15 +187,10 @@
       display: grid;
       gap: 12px;
     }
-    .card {
-      padding: 16px;
-    }
+    .card { padding: 16px; }
     .muted { color: var(--muted); }
-    .task-list, .submission-list {
-      display: grid;
-      gap: 12px;
-    }
-    .task-item, .submission-item {
+    .task-list, .submission-list, .sample-list { display: grid; gap: 12px; }
+    .task-item, .submission-item, .sample-card {
       border: 1px solid var(--line);
       padding: 14px;
       background: var(--soft);
@@ -207,12 +199,12 @@
       border-color: var(--text);
       background: var(--surface);
     }
-    .task-index {
+    .task-index, .sample-meta {
       font-size: 13px;
       color: var(--muted);
       margin-bottom: 6px;
     }
-    .task-title {
+    .task-title, .sample-title {
       margin: 0 0 8px;
       font-size: 18px;
       line-height: 1.1;
@@ -268,23 +260,23 @@
   <header class="hero">
     <div class="shell hero-grid">
       <div>
-        <div class="eyebrow">Simple MVP • shareable link • no backend required</div>
-        <h1>One page to create, share, and review a product test.</h1>
-        <p class="lead">This is the smallest interactive MVP that still matches the landing page: write a mission, generate a tester link, collect task responses, and review the submission in a lightweight operator view.</p>
+        <div class="eyebrow">Simple MVP • shareable link • seeded with 10 fake studies</div>
+        <h1>Ten fake product tests, ready to demo right now.</h1>
+        <p class="lead">I filled the MVP with sample studies inspired by widely used apps and websites like Instagram, Claude, YouTube, Airbnb, Figma, Notion, Spotify, Uber, Amazon, and Duolingo. You can load any one, generate a tester link, and review seeded fake submissions.</p>
         <div class="stats">
-          <div class="stat"><div class="stat-value">1</div><div class="muted">mission builder</div></div>
-          <div class="stat"><div class="stat-value">1</div><div class="muted">shareable tester link</div></div>
-          <div class="stat"><div class="stat-value">1</div><div class="muted">review queue</div></div>
+          <div class="stat"><div class="stat-value">10</div><div class="muted">sample studies</div></div>
+          <div class="stat"><div class="stat-value">10</div><div class="muted">fake submissions</div></div>
+          <div class="stat"><div class="stat-value">1</div><div class="muted">shareable tester flow</div></div>
         </div>
       </div>
       <div class="panel">
-        <div class="label">How to use this MVP</div>
+        <div class="label">How to use this demo</div>
         <div class="stack muted">
-          <div>1. Build a mission in <strong>Create</strong>.</div>
-          <div>2. Copy the shareable tester link.</div>
-          <div>3. Open that link in another tab or send it to someone.</div>
-          <div>4. Complete the tester flow and submit.</div>
-          <div>5. View the saved submission in <strong>Review</strong>.</div>
+          <div>1. Pick one of the 10 sample tests.</div>
+          <div>2. The mission form fills automatically.</div>
+          <div>3. Generate or open the shareable tester link.</div>
+          <div>4. Switch to Review to browse seeded fake submissions.</div>
+          <div>5. Edit any mission if you want a custom version.</div>
         </div>
       </div>
     </div>
@@ -301,39 +293,45 @@
       <section class="stack">
         <div id="createView" class="panel stack">
           <div>
+            <div class="label">Sample mission library</div>
+            <p class="muted">These are fake studies modeled on popular products. Load one to instantly populate the mission builder.</p>
+          </div>
+          <div id="sampleList" class="sample-list"></div>
+          <div class="divider"></div>
+          <div>
             <div class="label">Mission setup</div>
-            <p class="muted">Keep this simple. The link below encodes the mission so it can be shared immediately.</p>
+            <p class="muted">The link below encodes the mission so it can be shared immediately without a backend.</p>
           </div>
           <div class="two-col">
             <div class="field-block">
               <div>
                 <label class="label" for="studyTitle">Study title</label>
-                <input id="studyTitle" type="text" value="Onboarding swarm for a wallet product" />
+                <input id="studyTitle" type="text" value="Instagram creator onboarding friction test" />
               </div>
               <div>
                 <label class="label" for="productUrl">Product URL</label>
-                <input id="productUrl" type="url" value="https://example.com/onboarding" />
+                <input id="productUrl" type="url" value="https://www.instagram.com" />
               </div>
               <div>
                 <label class="label" for="cohort">Audience</label>
-                <input id="cohort" type="text" value="First-time crypto-curious users" />
+                <input id="cohort" type="text" value="18–30 casual creators posting weekly" />
               </div>
               <div>
                 <label class="label" for="reward">Reward</label>
-                <input id="reward" type="text" value="$15 on approval" />
+                <input id="reward" type="text" value="$18 on approval" />
               </div>
             </div>
             <div class="field-block">
               <div>
                 <label class="label" for="missionIntro">Mission intro</label>
-                <textarea id="missionIntro">Complete the onboarding flow, narrate where you hesitate, and capture the moments that feel confusing or risky.</textarea>
+                <textarea id="missionIntro">Walk through the creator flow like you are posting your first polished Reel. Say what feels obvious, what feels hidden, and what would slow you down.</textarea>
               </div>
               <div>
                 <label class="label" for="taskList">Tasks (one per line)</label>
-                <textarea id="taskList">Create a wallet account.
-Explain what feels confusing during setup.
-Take a screenshot of the moment you feel the most friction.
-Say whether you would trust this product enough to continue.</textarea>
+                <textarea id="taskList">Find the path to create a Reel.
+Locate audience or privacy controls before posting.
+Show where you would add music or effects.
+Describe what feels unclear before you hit publish.</textarea>
               </div>
             </div>
           </div>
@@ -366,13 +364,13 @@ Say whether you would trust this product enough to continue.</textarea>
           <div class="button-row">
             <button id="submitResponse" class="button">Submit session</button>
           </div>
-          <div class="muted">This MVP stores submissions in local browser storage so you can iterate on the flow without standing up a backend yet.</div>
+          <div class="muted">This demo stores fake/demo submissions in local browser storage so it can feel full without a backend.</div>
         </div>
 
         <div id="reviewView" class="panel stack hidden">
           <div>
             <div class="label">Review queue</div>
-            <p class="muted">Simple operator view for the latest local submissions from this browser.</p>
+            <p class="muted">Seeded with 10 fake submissions across 10 popular products, plus any new local submissions created in this browser.</p>
           </div>
           <div id="reviewList" class="submission-list"></div>
         </div>
@@ -380,23 +378,19 @@ Say whether you would trust this product enough to continue.</textarea>
 
       <aside class="stack">
         <div class="panel">
-          <div class="label">What this MVP proves</div>
+          <div class="label">Included sample products</div>
+          <div class="stack muted" id="sampleNames"></div>
+        </div>
+        <div class="panel">
+          <div class="label">What this proves</div>
           <div class="stack muted">
-            <div>Researchers can define a mission without setup friction.</div>
-            <div>Testers can receive a clean brief from a single link.</div>
-            <div>Responses can be structured well enough for review.</div>
+            <div>You can demo a realistic study library immediately.</div>
+            <div>Each mission generates a real shareable tester link.</div>
+            <div>The review queue can feel populated before backend work starts.</div>
           </div>
         </div>
         <div class="panel">
-          <div class="label">Next backend upgrade path</div>
-          <div class="stack muted">
-            <div>Swap local storage for a real submissions database.</div>
-            <div>Add signed uploads for video and screenshots.</div>
-            <div>Attach an operator summary layer on top.</div>
-          </div>
-        </div>
-        <div class="panel">
-          <div class="label">Submission payload</div>
+          <div class="label">Latest submission payload</div>
           <div id="submissionPreview" class="code-box">No submission yet.</div>
         </div>
       </aside>
@@ -404,6 +398,219 @@ Say whether you would trust this product enough to continue.</textarea>
   </main>
 
   <script>
+    const sampleMissions = [
+      {
+        slug: 'instagram',
+        app: 'Instagram',
+        title: 'Instagram creator onboarding friction test',
+        productUrl: 'https://www.instagram.com',
+        cohort: '18–30 casual creators posting weekly',
+        reward: '$18 on approval',
+        intro: 'Walk through the creator flow like you are posting your first polished Reel. Say what feels obvious, what feels hidden, and what would slow you down.',
+        tasks: [
+          'Find the path to create a Reel.',
+          'Locate audience or privacy controls before posting.',
+          'Show where you would add music or effects.',
+          'Describe what feels unclear before you hit publish.'
+        ],
+        fakeSubmission: [
+          'The create entry point was visible, but the Reel-vs-post choice felt too fast and slightly stressful.',
+          'Privacy controls were findable, but I hesitated because the labels felt more creator-native than beginner-friendly.',
+          'Music was easy to find; effects felt secondary and easy to skip.',
+          'I wanted one clearer final confirmation before publishing.'
+        ]
+      },
+      {
+        slug: 'claude',
+        app: 'Claude',
+        title: 'Claude web first-project setup test',
+        productUrl: 'https://claude.ai',
+        cohort: 'Knowledge workers trying AI tools for serious tasks',
+        reward: '$20 on approval',
+        intro: 'Pretend you just signed in and want Claude to help with a real work project. Narrate what makes the product feel powerful versus intimidating.',
+        tasks: [
+          'Start a new chat or workspace for a project.',
+          'Find how to upload or attach source material.',
+          'Try to understand how you would organize repeat work.',
+          'Explain what would make you trust the output enough to keep going.'
+        ],
+        fakeSubmission: [
+          'Starting a new conversation was easy, but I wanted clearer affordances around project structure.',
+          'Uploading files felt straightforward once found, though the location blended into the rest of the UI.',
+          'I understood the workflow after a minute, but new users may not instantly grasp the best way to structure repeated tasks.',
+          'Trust increased when I saw the model handle context cleanly; I still wanted clearer cues about limits.'
+        ]
+      },
+      {
+        slug: 'youtube',
+        app: 'YouTube',
+        title: 'YouTube subscription discovery test',
+        productUrl: 'https://www.youtube.com',
+        cohort: 'Daily video consumers looking for new channels',
+        reward: '$16 on approval',
+        intro: 'Pretend you are trying to discover and subscribe to a new niche channel. Talk through what drives confidence and what creates browsing fatigue.',
+        tasks: [
+          'Search for a niche topic you care about.',
+          'Compare two channels and decide which you would subscribe to.',
+          'Find signals that help you judge quality fast.',
+          'Describe where the experience feels overloaded.'
+        ],
+        fakeSubmission: [
+          'Search worked, but the results page felt noisy and ad-heavy.',
+          'Channel comparison relied too much on thumbnail quality and social proof.',
+          'View counts and freshness helped most.',
+          'The page got overwhelming when shorts, ads, and long-form results mixed together.'
+        ]
+      },
+      {
+        slug: 'airbnb',
+        app: 'Airbnb',
+        title: 'Airbnb weekend booking confidence test',
+        productUrl: 'https://www.airbnb.com',
+        cohort: 'Urban professionals booking 2–3 night leisure trips',
+        reward: '$22 on approval',
+        intro: 'Pretend you are booking a weekend stay in a city you have never visited. Explain what gives you confidence and what creates hesitation before checkout.',
+        tasks: [
+          'Search for a stay in a major city for two nights.',
+          'Use filters to narrow options.',
+          'Compare two listings and pick one.',
+          'Explain what might stop you before booking.'
+        ],
+        fakeSubmission: [
+          'Search was easy to start, but filtering took more time than expected.',
+          'Price clarity improved once taxes and fees were visible, though I still felt a small bait-and-switch effect.',
+          'Photos and reviews drove the final choice.',
+          'I hesitated most around cancellation terms and total cost certainty.'
+        ]
+      },
+      {
+        slug: 'figma',
+        app: 'Figma',
+        title: 'Figma file handoff comprehension test',
+        productUrl: 'https://www.figma.com',
+        cohort: 'PMs and developers reading design files without deep design training',
+        reward: '$20 on approval',
+        intro: 'Pretend you need to inspect a design file and understand exactly what to build. Talk through what feels intuitive and what feels too designer-centric.',
+        tasks: [
+          'Open a file and find the main screen flow.',
+          'Locate the key handoff specs you would need as a builder.',
+          'Try to understand component reuse or variants.',
+          'Describe where you feel lost.'
+        ],
+        fakeSubmission: [
+          'The canvas was powerful but overwhelming at first glance.',
+          'Inspect-mode style details were useful once discovered.',
+          'Component logic made sense after a minute, but the vocabulary assumes prior exposure.',
+          'I felt most lost when trying to understand page structure versus final shipping state.'
+        ]
+      },
+      {
+        slug: 'notion',
+        app: 'Notion',
+        title: 'Notion team wiki setup test',
+        productUrl: 'https://www.notion.so',
+        cohort: 'Startup operators building an internal knowledge base',
+        reward: '$17 on approval',
+        intro: 'Pretend you are creating a new team wiki from scratch. Explain how easily you can go from blank page to useful shared structure.',
+        tasks: [
+          'Create a new page for a team wiki.',
+          'Add sections or blocks that would organize information.',
+          'Try to understand sharing and permissions.',
+          'Describe what still feels too open-ended.'
+        ],
+        fakeSubmission: [
+          'The blank state felt flexible but slightly intimidating.',
+          'Adding blocks was easy once I started typing.',
+          'Permissions were understandable but not especially prominent.',
+          'The main challenge was too many possible ways to structure the page.'
+        ]
+      },
+      {
+        slug: 'spotify',
+        app: 'Spotify',
+        title: 'Spotify playlist discovery and save test',
+        productUrl: 'https://open.spotify.com',
+        cohort: 'Music listeners who discover songs through mood-based browsing',
+        reward: '$15 on approval',
+        intro: 'Pretend you want a playlist for a specific mood while working. Walk through how you would discover something and decide it is worth saving.',
+        tasks: [
+          'Search for a focus or work playlist.',
+          'Compare two playlists and choose one.',
+          'Save the playlist for later.',
+          'Explain what makes discovery feel smart versus repetitive.'
+        ],
+        fakeSubmission: [
+          'Search felt immediate and familiar.',
+          'I compared playlists mostly by cover art, title, and follower count.',
+          'Saving was easy once I committed to one option.',
+          'Discovery felt good, but many playlist options blended together.'
+        ]
+      },
+      {
+        slug: 'uber',
+        app: 'Uber',
+        title: 'Uber airport pickup confidence test',
+        productUrl: 'https://www.uber.com',
+        cohort: 'Travelers booking rides in unfamiliar cities',
+        reward: '$18 on approval',
+        intro: 'Pretend you just landed at an airport and need a ride fast. Explain what helps you feel in control and what creates stress.',
+        tasks: [
+          'Set an airport pickup destination.',
+          'Compare ride options and choose one.',
+          'Check estimated timing and price.',
+          'Describe what still feels uncertain before confirming.'
+        ],
+        fakeSubmission: [
+          'Destination entry was simple, which lowered anxiety quickly.',
+          'Ride tiers were clear enough, though I wanted stronger cues on pickup convenience.',
+          'Timing and price estimates were the most useful elements.',
+          'I still worried about where exactly to stand at pickup.'
+        ]
+      },
+      {
+        slug: 'amazon',
+        app: 'Amazon',
+        title: 'Amazon checkout trust and speed test',
+        productUrl: 'https://www.amazon.com',
+        cohort: 'Frequent ecommerce buyers shopping on mobile and desktop',
+        reward: '$16 on approval',
+        intro: 'Pretend you need to buy one practical item quickly. Talk through whether the experience feels fast, trustworthy, and free from distraction.',
+        tasks: [
+          'Search for a common household item.',
+          'Pick a product from the results list.',
+          'Check delivery timing and total price.',
+          'Describe anything that makes checkout feel cluttered or pushy.'
+        ],
+        fakeSubmission: [
+          'Search returned lots of options fast, but the results page felt crowded.',
+          'The chosen product looked credible because of ratings and delivery promises.',
+          'Delivery speed was easy to find and highly persuasive.',
+          'Upsells and extra modules made the page feel busier than it needed to be.'
+        ]
+      },
+      {
+        slug: 'duolingo',
+        app: 'Duolingo',
+        title: 'Duolingo first-lesson motivation test',
+        productUrl: 'https://www.duolingo.com',
+        cohort: 'New language learners trying to build a daily habit',
+        reward: '$14 on approval',
+        intro: 'Pretend you are trying to start a new language habit. Explain what motivates you, what feels playful, and what might make you bounce.',
+        tasks: [
+          'Start or preview your first lesson.',
+          'Notice any motivational prompts or streak mechanics.',
+          'Find out how the app signals progress.',
+          'Describe what would keep you coming back tomorrow.'
+        ],
+        fakeSubmission: [
+          'The first lesson felt approachable and low-risk.',
+          'Motivational prompts were effective without feeling too heavy-handed.',
+          'Progress signals were satisfying and easy to understand.',
+          'I would come back if the early difficulty kept adapting at the right pace.'
+        ]
+      }
+    ];
+
     const views = {
       create: document.getElementById('createView'),
       test: document.getElementById('testView'),
@@ -413,6 +620,8 @@ Say whether you would trust this product enough to continue.</textarea>
     const submissionPreview = document.getElementById('submissionPreview');
     const reviewList = document.getElementById('reviewList');
     const shareLink = document.getElementById('shareLink');
+    const sampleList = document.getElementById('sampleList');
+    const sampleNames = document.getElementById('sampleNames');
     const shareBase = `${window.location.origin}${window.location.pathname}`;
 
     function setView(name) {
@@ -450,6 +659,17 @@ Say whether you would trust this product enough to continue.</textarea>
       };
     }
 
+    function applyMissionToForm(mission) {
+      document.getElementById('studyTitle').value = mission.title || '';
+      document.getElementById('productUrl').value = mission.productUrl || '';
+      document.getElementById('cohort').value = mission.cohort || '';
+      document.getElementById('reward').value = mission.reward || '';
+      document.getElementById('missionIntro').value = mission.intro || '';
+      document.getElementById('taskList').value = (mission.tasks || []).join('\n');
+      refreshShareLink();
+      renderTestView(buildMissionFromForm());
+    }
+
     function buildShareUrl(mission) {
       const encoded = encodeMission(mission);
       return `${shareBase}?view=test&mission=${encodeURIComponent(encoded)}`;
@@ -460,6 +680,35 @@ Say whether you would trust this product enough to continue.</textarea>
       const url = buildShareUrl(mission);
       shareLink.textContent = url;
       return url;
+    }
+
+    function renderSampleLibrary() {
+      sampleList.innerHTML = '';
+      sampleNames.innerHTML = '';
+      sampleMissions.forEach((mission, index) => {
+        const card = document.createElement('div');
+        card.className = 'sample-card';
+        card.innerHTML = `
+          <div class="sample-meta">Sample ${index + 1} • ${mission.app}</div>
+          <div class="sample-title">${mission.title}</div>
+          <div class="muted" style="margin-bottom:12px;">${mission.cohort}</div>
+          <div class="button-row">
+            <button class="sample-button secondary" data-sample="${mission.slug}">Load sample</button>
+          </div>
+        `;
+        sampleList.appendChild(card);
+
+        const name = document.createElement('div');
+        name.textContent = `${index + 1}. ${mission.app}`;
+        sampleNames.appendChild(name);
+      });
+
+      sampleList.querySelectorAll('[data-sample]').forEach(button => {
+        button.addEventListener('click', () => {
+          const mission = sampleMissions.find(item => item.slug === button.dataset.sample);
+          if (mission) applyMissionToForm(mission);
+        });
+      });
     }
 
     function renderTestView(mission) {
@@ -493,6 +742,21 @@ Say whether you would trust this product enough to continue.</textarea>
       });
     }
 
+    function createSeedSubmission(mission, index) {
+      return {
+        title: mission.title,
+        productUrl: mission.productUrl,
+        cohort: mission.cohort,
+        reward: mission.reward,
+        submittedAt: `Seeded demo submission ${index + 1}`,
+        responses: mission.tasks.map((task, taskIndex) => ({
+          task,
+          note: mission.fakeSubmission[taskIndex] || 'Fake tester note.',
+          fileName: `sample-${mission.slug}-${taskIndex + 1}.png`
+        }))
+      };
+    }
+
     function getStoredSubmissions() {
       try {
         return JSON.parse(localStorage.getItem('hfs-submissions') || '[]');
@@ -505,6 +769,13 @@ Say whether you would trust this product enough to continue.</textarea>
       localStorage.setItem('hfs-submissions', JSON.stringify(items));
     }
 
+    function seedSubmissionsIfEmpty() {
+      const existing = getStoredSubmissions();
+      if (existing.length) return;
+      const seeded = sampleMissions.map(createSeedSubmission);
+      saveStoredSubmissions(seeded);
+    }
+
     function renderReview() {
       const items = getStoredSubmissions().slice().reverse();
       reviewList.innerHTML = '';
@@ -515,7 +786,7 @@ Say whether you would trust this product enough to continue.</textarea>
       }
 
       submissionPreview.textContent = JSON.stringify(items[0], null, 2);
-      items.forEach((item, idx) => {
+      items.forEach((item) => {
         const node = document.createElement('div');
         node.className = 'submission-item';
         const responsesHtml = item.responses.map((response, i) => `
@@ -591,11 +862,21 @@ Say whether you would trust this product enough to continue.</textarea>
       setView('review');
     });
 
+    ['studyTitle', 'productUrl', 'cohort', 'reward', 'missionIntro', 'taskList'].forEach(id => {
+      document.getElementById(id).addEventListener('input', () => {
+        refreshShareLink();
+        renderTestView(buildMissionFromForm());
+      });
+    });
+
     const params = new URLSearchParams(window.location.search);
     const missionParam = params.get('mission');
     const requestedView = params.get('view');
-    const mission = missionParam ? decodeMission(missionParam) : buildMissionFromForm();
-    refreshShareLink();
+    const mission = missionParam ? decodeMission(missionParam) : sampleMissions[0];
+
+    renderSampleLibrary();
+    seedSubmissionsIfEmpty();
+    applyMissionToForm(mission || sampleMissions[0]);
     renderReview();
 
     if (mission) {
