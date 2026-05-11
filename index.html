@@ -5,236 +5,257 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Human Feedback Swarm — Real people. Fast product feedback.</title>
   <meta name="description" content="Deploy a product, brief 50 to 100 real humans, and get fast UX feedback with screen recordings, annotations, and quality checks." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #fbf8f2;
+      --bg: #ffffff;
       --surface: #ffffff;
-      --surface-soft: #f3ede4;
-      --text: #1f1a14;
-      --muted: #6d6359;
-      --line: #e7ddd1;
-      --accent: #ff8b5d;
-      --accent-dark: #ef6d3f;
-      --accent-soft: #fff1ea;
-      --green: #2f8f5b;
-      --shadow: 0 20px 50px rgba(40, 26, 10, 0.08);
-      --radius-xl: 28px;
-      --radius-lg: 20px;
-      --radius-md: 14px;
-      --max: 1160px;
+      --soft: #f5f5f5;
+      --text: #000000;
+      --muted: #555555;
+      --line: #d9d9d9;
+      --max: 1120px;
     }
 
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
       margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: var(--bg);
       color: var(--text);
+      font-family: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 16px;
       line-height: 1.5;
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      font-synthesis-weight: none;
     }
-    a { color: inherit; text-decoration: none; }
-    img { max-width: 100%; display: block; }
-    button { font: inherit; }
 
-    .shell { width: min(calc(100% - 32px), var(--max)); margin: 0 auto; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    strong, b, h1, h2, h3, .brand, .button, .eyebrow, .mini-label, .step-number, .quote-role, .stat-value {
+      font-weight: 500;
+    }
+
+    .shell {
+      width: min(calc(100% - 40px), var(--max));
+      margin: 0 auto;
+    }
 
     .nav {
-      padding: 18px 0;
       position: sticky;
       top: 0;
-      z-index: 20;
-      background: color-mix(in srgb, var(--bg) 88%, white 12%);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(231, 221, 209, 0.7);
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.96);
+      border-bottom: 1px solid var(--line);
     }
+
     .nav-inner {
+      min-height: 72px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
+      gap: 20px;
     }
+
     .brand {
       display: inline-flex;
       align-items: center;
       gap: 12px;
-      font-weight: 700;
-      letter-spacing: -0.03em;
+      letter-spacing: -0.02em;
     }
+
     .brand-mark {
-      width: 38px;
-      height: 38px;
+      width: 28px;
+      height: 28px;
       display: grid;
       place-items: center;
-      border-radius: 12px;
-      background: var(--accent);
-      color: white;
-      font-weight: 800;
-      box-shadow: 0 10px 20px rgba(255, 139, 93, 0.24);
+      border: 1px solid var(--text);
+      font-size: 14px;
     }
-    .nav-links {
+
+    .nav-links,
+    .button-row {
       display: flex;
-      gap: 18px;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .nav-links {
       color: var(--muted);
       font-size: 14px;
     }
-    .nav-links a:hover { color: var(--text); }
 
-    .button-row { display: flex; flex-wrap: wrap; gap: 12px; }
     .button {
+      min-height: 46px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 48px;
-      padding: 12px 18px;
-      border-radius: 999px;
-      border: 1px solid transparent;
-      background: var(--accent);
-      color: white;
-      font-weight: 700;
-      box-shadow: 0 14px 28px rgba(255, 139, 93, 0.22);
-      transition: transform .16s ease, background .16s ease;
+      padding: 0 18px;
+      border: 1px solid var(--text);
+      background: var(--text);
+      color: var(--bg);
+      transition: background .15s ease, color .15s ease;
     }
-    .button:hover { transform: translateY(-1px); background: var(--accent-dark); }
+
+    .button:hover {
+      background: var(--bg);
+      color: var(--text);
+    }
+
     .button.secondary {
-      background: white;
+      background: var(--bg);
       color: var(--text);
       border-color: var(--line);
-      box-shadow: none;
+    }
+
+    .button.secondary:hover {
+      border-color: var(--text);
     }
 
     .hero {
-      padding: 64px 0 36px;
+      padding: 72px 0 40px;
+      border-bottom: 1px solid var(--line);
     }
+
     .hero-grid {
       display: grid;
       grid-template-columns: 1.05fr 0.95fr;
-      gap: 36px;
-      align-items: center;
+      gap: 32px;
+      align-items: start;
     }
+
     .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: var(--accent-soft);
-      color: #9a4d2f;
+      display: inline-block;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      background: var(--soft);
+      color: var(--muted);
       font-size: 13px;
-      font-weight: 600;
+      letter-spacing: 0;
     }
+
     h1 {
       margin: 18px 0 16px;
-      font-size: clamp(42px, 7vw, 72px);
-      line-height: 0.95;
-      letter-spacing: -0.065em;
       max-width: 10ch;
+      font-size: clamp(40px, 7vw, 72px);
+      line-height: 0.96;
+      letter-spacing: -0.05em;
     }
+
     .lead {
-      margin: 0 0 20px;
+      margin: 0 0 22px;
       max-width: 58ch;
       color: var(--muted);
       font-size: 18px;
     }
+
     .hero-points {
       display: grid;
       gap: 10px;
-      margin: 22px 0 28px;
-      color: var(--text);
+      margin: 0 0 28px;
     }
+
     .hero-points div {
-      display: flex;
-      align-items: flex-start;
+      display: grid;
+      grid-template-columns: 20px 1fr;
       gap: 10px;
+      align-items: start;
     }
-    .hero-points span:first-child {
-      color: var(--green);
-      font-weight: 800;
-      flex: 0 0 auto;
+
+    .hero-card,
+    .card,
+    .quote,
+    .cta-box,
+    .logo-band-inner,
+    .stack-card,
+    .kpi {
+      border: 1px solid var(--line);
+      background: var(--surface);
     }
 
     .hero-card {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow);
-      overflow: hidden;
+      display: grid;
     }
+
     .hero-card-head {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
-      gap: 12px;
-      padding: 18px 20px;
+      gap: 16px;
+      padding: 20px;
       border-bottom: 1px solid var(--line);
-      background: #fffaf5;
+      background: var(--soft);
     }
+
     .mini-label {
       color: var(--muted);
       font-size: 12px;
-      letter-spacing: 0.12em;
       text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
     }
+
     .hero-card-body {
       padding: 20px;
       display: grid;
       gap: 16px;
     }
+
     .hero-stack {
       display: grid;
       gap: 12px;
     }
+
     .stack-card {
       padding: 16px;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: var(--surface-soft);
     }
-    .stack-card strong {
-      display: block;
-      margin-bottom: 4px;
-      letter-spacing: -0.03em;
-    }
-    .stack-card p {
-      margin: 0;
+
+    .stack-card p,
+    .section-head p,
+    .card p,
+    .quote p,
+    .cta-box p,
+    .kpi span {
       color: var(--muted);
-      font-size: 14px;
     }
+
     .kpis {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 12px;
     }
+
     .kpi {
       padding: 14px;
-      border-radius: 16px;
-      background: white;
-      border: 1px solid var(--line);
+      min-height: 108px;
+      display: grid;
+      align-content: start;
+      gap: 4px;
     }
-    .kpi strong {
-      display: block;
+
+    .stat-value {
       font-size: 26px;
       line-height: 1;
-      letter-spacing: -0.05em;
-      margin-bottom: 6px;
-    }
-    .kpi span {
-      color: var(--muted);
-      font-size: 13px;
+      letter-spacing: -0.04em;
     }
 
     .logo-band {
-      padding: 12px 0 8px;
+      padding: 22px 0 0;
     }
+
     .logo-band-inner {
-      padding: 18px 22px;
-      border-radius: 22px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.6);
+      padding: 20px;
       display: grid;
-      gap: 10px;
+      gap: 12px;
       text-align: center;
+      background: var(--soft);
     }
+
     .logo-row {
       display: flex;
       flex-wrap: wrap;
@@ -242,120 +263,79 @@
       gap: 14px;
       color: var(--muted);
       font-size: 14px;
-      font-weight: 600;
     }
 
     section {
-      padding: 34px 0;
+      padding: 40px 0;
+      border-bottom: 1px solid var(--line);
     }
+
     .section-head {
       max-width: 720px;
-      margin-bottom: 22px;
+      margin-bottom: 24px;
     }
-    .section-head h2 {
+
+    .section-head h2,
+    .cta-box h2 {
       margin: 0 0 10px;
-      font-size: clamp(30px, 4.6vw, 48px);
-      line-height: 1;
-      letter-spacing: -0.055em;
-    }
-    .section-head p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 17px;
+      font-size: clamp(30px, 4.8vw, 50px);
+      line-height: 0.98;
+      letter-spacing: -0.045em;
+      font-weight: 500;
     }
 
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-    }
-    .card {
-      padding: 24px;
-      border-radius: var(--radius-lg);
-      background: var(--surface);
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow);
-    }
-    .card h3 {
-      margin: 0 0 8px;
-      font-size: 22px;
-      line-height: 1.05;
-      letter-spacing: -0.04em;
-    }
-    .card p {
-      margin: 0;
-      color: var(--muted);
-    }
-
-    .simple-steps {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-    }
-    .step-number {
-      width: 42px;
-      height: 42px;
-      display: grid;
-      place-items: center;
-      border-radius: 12px;
-      background: var(--accent-soft);
-      color: #a04f31;
-      font-weight: 800;
-      margin-bottom: 16px;
-    }
-
+    .grid-3,
+    .simple-steps,
     .testimonial-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
+      gap: 16px;
     }
+
+    .card,
     .quote {
-      padding: 24px;
-      border-radius: var(--radius-lg);
-      background: white;
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow);
+      padding: 22px;
+      min-height: 100%;
     }
-    .quote p {
-      margin: 0 0 18px;
-      font-size: 17px;
-      color: #3f372f;
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      font-weight: 500;
     }
-    .quote strong {
-      display: block;
-      margin-bottom: 2px;
-      letter-spacing: -0.02em;
-    }
-    .quote span {
-      color: var(--muted);
+
+    .step-number {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--text);
+      margin-bottom: 16px;
       font-size: 14px;
     }
 
-    .cta {
-      padding-bottom: 72px;
+    .quote p {
+      margin: 0 0 18px;
+      font-size: 17px;
     }
+
+    .quote-role {
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .cta {
+      padding: 40px 0 72px;
+      border-bottom: 0;
+    }
+
     .cta-box {
-      padding: 34px;
-      border-radius: 28px;
-      background: #fff6ef;
-      border: 1px solid #f0d8c8;
+      padding: 28px;
       display: grid;
       gap: 18px;
-      align-items: center;
-      box-shadow: var(--shadow);
-    }
-    .cta-box h2 {
-      margin: 0;
-      font-size: clamp(32px, 5vw, 54px);
-      line-height: 0.95;
-      letter-spacing: -0.06em;
-      max-width: 11ch;
-    }
-    .cta-box p {
-      margin: 0;
-      color: var(--muted);
-      max-width: 62ch;
-      font-size: 17px;
+      background: var(--soft);
     }
 
     .footer {
@@ -369,19 +349,36 @@
       .hero-grid,
       .grid-3,
       .simple-steps,
-      .testimonial-grid {
+      .testimonial-grid,
+      .kpis {
         grid-template-columns: 1fr;
       }
-      .kpis { grid-template-columns: 1fr; }
-      .nav-links { display: none; }
-      h1 { max-width: 12ch; }
+
+      .nav-links {
+        display: none;
+      }
+
+      h1 {
+        max-width: 12ch;
+      }
     }
 
     @media (max-width: 640px) {
-      .hero { padding-top: 42px; }
-      .button-row { flex-direction: column; }
-      .button { width: 100%; }
-      .cta-box { padding: 24px; }
+      .hero {
+        padding-top: 42px;
+      }
+
+      .button-row {
+        width: 100%;
+      }
+
+      .button {
+        width: 100%;
+      }
+
+      .nav-inner {
+        padding: 12px 0;
+      }
     }
   </style>
 </head>
@@ -413,10 +410,10 @@
           Deploy your product, give clear tasks to 50–100 humans, and get back screen recordings, annotated pain points, and decision-ready UX feedback in hours instead of weeks.
         </p>
         <div class="hero-points">
-          <div><span>✔</span><span>Test live products, staging links, or prototypes in a browser-native flow.</span></div>
-          <div><span>✔</span><span>Collect video walkthroughs, screenshots, and honest reactions from a real human panel.</span></div>
-          <div><span>✔</span><span>Filter low-quality responses with identity checks and agent-based quality review.</span></div>
-          <div><span>✔</span><span>Pay dynamically for better evidence, specialist insight, or camera-on sessions.</span></div>
+          <div><span>01</span><span>Test live products, staging links, or prototypes in a browser-native flow.</span></div>
+          <div><span>02</span><span>Collect video walkthroughs, screenshots, and honest reactions from a real human panel.</span></div>
+          <div><span>03</span><span>Filter low-quality responses with identity checks and agent-based quality review.</span></div>
+          <div><span>04</span><span>Pay dynamically for better evidence, specialist insight, or camera-on sessions.</span></div>
         </div>
         <div class="button-row">
           <a class="button" href="#how">How it works</a>
@@ -430,7 +427,7 @@
             <div class="mini-label">Example study</div>
             <strong>Onboarding swarm for a wallet product</strong>
           </div>
-          <div style="color:var(--green);font-weight:700;">Ready in ~2 hours</div>
+          <div>Ready in ~2 hours</div>
         </div>
         <div class="hero-card-body">
           <div class="hero-stack">
@@ -448,9 +445,9 @@
             </div>
           </div>
           <div class="kpis">
-            <div class="kpi"><strong>75</strong><span>testers in one cohort</span></div>
-            <div class="kpi"><strong>$18</strong><span>average payout</span></div>
-            <div class="kpi"><strong>14</strong><span>issue clusters surfaced</span></div>
+            <div class="kpi"><div class="stat-value">75</div><span>testers in one cohort</span></div>
+            <div class="kpi"><div class="stat-value">$18</div><span>average payout</span></div>
+            <div class="kpi"><div class="stat-value">14</div><span>issue clusters surfaced</span></div>
           </div>
         </div>
       </div>
@@ -459,7 +456,7 @@
 
   <section class="logo-band shell">
     <div class="logo-band-inner">
-      <div class="mini-label" style="letter-spacing:0.1em;">Built for teams that need fast product truth</div>
+      <div class="mini-label">Built for teams that need fast product truth</div>
       <div class="logo-row">
         <span>growth teams</span>
         <span>product designers</span>
@@ -534,17 +531,17 @@
       <div class="testimonial-grid">
         <div class="quote">
           <p>“We need real reactions before shipping, not another slow study. This gives us a fast way to see what actually confuses people.”</p>
-          <strong>Product lead</strong>
+          <span class="quote-role">Product lead</span>
           <span>new feature launch</span>
         </div>
         <div class="quote">
           <p>“The best part is the combination of real humans and structured evidence. You are not just getting opinions — you are seeing the friction.”</p>
-          <strong>UX researcher</strong>
+          <span class="quote-role">UX researcher</span>
           <span>growth and onboarding</span>
         </div>
         <div class="quote">
           <p>“If the trust layer works, this could be much more scalable than classic moderated research and more credible than cheap panel spam.”</p>
-          <strong>Founder</strong>
+          <span class="quote-role">Founder</span>
           <span>rapid product iteration</span>
         </div>
       </div>
@@ -567,7 +564,7 @@
   </section>
 
   <div class="footer shell">
-    Simplified landing page revision inspired by the clarity and friendliness of Helpfull, adapted for the Human Feedback Swarm concept.
+    Monochrome landing page revision for the Human Feedback Swarm concept.
   </div>
 </body>
 </html>
