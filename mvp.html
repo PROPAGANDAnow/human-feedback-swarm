@@ -237,10 +237,139 @@
       white-space: pre-wrap;
       color: var(--muted);
     }
+    .test-shell {
+      display: grid;
+      grid-template-columns: 3fr 1fr;
+      min-height: 78vh;
+      gap: 0;
+      border: 1px solid var(--line);
+      background: var(--surface);
+    }
+    .browser-pane {
+      border-right: 1px solid var(--line);
+      display: grid;
+      grid-template-rows: auto 1fr;
+      min-height: 78vh;
+      background: var(--surface);
+    }
+    .browser-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      background: var(--soft);
+    }
+    .browser-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      flex: 1;
+    }
+    .browser-dot {
+      width: 10px;
+      height: 10px;
+      border: 1px solid var(--text);
+      background: var(--bg);
+      flex: 0 0 auto;
+    }
+    .browser-url {
+      min-height: 36px;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      background: var(--bg);
+      color: var(--muted);
+      font-size: 13px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+    }
+    .browser-status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .recording-pill {
+      border: 1px solid var(--text);
+      padding: 0 10px;
+      min-height: 32px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg);
+      font-size: 13px;
+    }
+    .recording-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--text);
+      display: inline-block;
+    }
+    .browser-stage {
+      position: relative;
+      min-height: 68vh;
+      background: #fafafa;
+    }
+    .browser-frame {
+      width: 100%;
+      height: 100%;
+      min-height: 68vh;
+      border: 0;
+      background: #ffffff;
+    }
+    .browser-fallback {
+      position: absolute;
+      inset: auto 16px 16px 16px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.96);
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+    }
+    .instructions-pane {
+      display: grid;
+      grid-template-rows: auto auto auto 1fr auto;
+      min-height: 78vh;
+      background: var(--surface);
+    }
+    .instructions-block {
+      padding: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+    .instructions-block:last-child {
+      border-bottom: 0;
+    }
+    .question-box {
+      display: grid;
+      gap: 10px;
+    }
+    .question-box textarea {
+      min-height: 88px;
+    }
+    .task-item.compact {
+      padding: 12px;
+      background: var(--surface);
+    }
+    .task-item.done {
+      background: var(--soft);
+      border-color: var(--line);
+    }
+    .task-item.current {
+      border-color: var(--text);
+    }
     .hidden { display: none !important; }
 
     @media (max-width: 980px) {
-      .hero-grid, .layout, .two-col, .stats { grid-template-columns: 1fr; }
+      .hero-grid, .layout, .two-col, .stats, .test-shell { grid-template-columns: 1fr; }
+      .browser-pane { border-right: 0; border-bottom: 1px solid var(--line); }
+      .instructions-pane { min-height: auto; }
     }
   </style>
 </head>
@@ -260,25 +389,25 @@
   <header class="hero">
     <div class="shell hero-grid">
       <div>
-        <div class="eyebrow">Simple MVP • shareable link • seeded with 10 fake studies</div>
-        <h1>Ten fake product tests, ready to demo right now.</h1>
-        <p class="lead">I filled the MVP with sample studies inspired by widely used apps and websites like Instagram, Claude, YouTube, Airbnb, Figma, Notion, Spotify, Uber, Amazon, and Duolingo. You can load any one, generate a tester link, and review seeded fake submissions.</p>
+        <div class="eyebrow">Simple MVP • in-app testing layout • seeded with 10 fake studies</div>
+        <h1>Run the test inside the app with a live browser pane.</h1>
+        <p class="lead">The tester now gets a split-screen flow: an embedded browser on the left at roughly 75% width, and instructions, rules, questions, and response capture on the right. It feels much closer to a real unmoderated product test.</p>
         <div class="stats">
           <div class="stat"><div class="stat-value">10</div><div class="muted">sample studies</div></div>
           <div class="stat"><div class="stat-value">10</div><div class="muted">fake submissions</div></div>
           <div class="stat"><div class="stat-value">1</div><div class="muted">shareable tester flow</div></div>
         </div>
       </div>
-      <div class="panel">
-        <div class="label">How to use this demo</div>
-        <div class="stack muted">
-          <div>1. Pick one of the 10 sample tests.</div>
-          <div>2. The mission form fills automatically.</div>
-          <div>3. Generate or open the shareable tester link.</div>
-          <div>4. Switch to Review to browse seeded fake submissions.</div>
-          <div>5. Edit any mission if you want a custom version.</div>
+        <div class="panel">
+          <div class="label">How to use this demo</div>
+          <div class="stack muted">
+            <div>1. Pick one of the 10 sample tests.</div>
+            <div>2. The mission form fills automatically.</div>
+            <div>3. Open the tester flow to see the in-app browser layout.</div>
+            <div>4. Use the left pane like the product under test and answer on the right.</div>
+            <div>5. Switch to Review to browse seeded fake submissions.</div>
+          </div>
         </div>
-      </div>
     </div>
   </header>
 
@@ -350,21 +479,70 @@ Describe what feels unclear before you hit publish.</textarea>
             <div class="label">Tester flow</div>
             <p id="testIntro" class="muted"></p>
           </div>
-          <div class="mission-preview card">
-            <div class="inline-row">
-              <span class="pill" id="studyAudience"></span>
-              <span class="pill" id="studyReward"></span>
+          <div class="test-shell">
+            <div class="browser-pane">
+              <div class="browser-topbar">
+                <div class="browser-controls">
+                  <span class="browser-dot"></span>
+                  <span class="browser-dot"></span>
+                  <span class="browser-dot"></span>
+                  <div id="browserUrl" class="browser-url"></div>
+                </div>
+                <div class="browser-status">
+                  <button id="recordToggle" class="button secondary" type="button">Start recording</button>
+                  <div class="recording-pill"><span class="recording-dot"></span><span id="recordingLabel">Not recording</span></div>
+                  <div class="recording-pill"><span id="recordingTimer">00:00</span></div>
+                </div>
+              </div>
+              <div class="browser-stage">
+                <iframe id="productFrame" class="browser-frame" title="Embedded product test area"></iframe>
+                <div id="embedFallback" class="browser-fallback">
+                  <div class="label">Embedding note</div>
+                  <div class="muted">Some major products block iframe embedding for security reasons. If the app does not render here, open it in a new tab and keep answering on the right.</div>
+                  <div class="button-row">
+                    <a id="fallbackOpenLink" class="button secondary" href="#" target="_blank" rel="noreferrer">Open product in new tab</a>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div>
-              <div class="label">Product URL</div>
-              <div id="studyProduct" class="link-box"></div>
+            <div class="instructions-pane">
+              <div class="instructions-block mission-preview">
+                <div class="inline-row">
+                  <span class="pill" id="studyAudience"></span>
+                  <span class="pill" id="studyReward"></span>
+                </div>
+                <div>
+                  <div class="label">Product URL</div>
+                  <div id="studyProduct" class="link-box"></div>
+                </div>
+              </div>
+              <div class="instructions-block">
+                <div class="label">Rules</div>
+                <div class="stack muted">
+                  <div>Use the product naturally and do not skip ahead.</div>
+                  <div>Keep a running commentary in the answers on the right.</div>
+                  <div>Flag the exact moment friction or doubt appears.</div>
+                </div>
+              </div>
+              <div class="instructions-block">
+                <div class="label">Current mission</div>
+                <div id="taskContainer" class="task-list"></div>
+              </div>
+              <div class="instructions-block question-box">
+                <div>
+                  <label class="label" for="globalFeedback">Overall session summary</label>
+                  <textarea id="globalFeedback" placeholder="What was easiest, what was hardest, and would you continue?"></textarea>
+                </div>
+              </div>
+              <div class="instructions-block">
+                <div class="button-row">
+                  <button id="submitResponse" class="button">Submit session</button>
+                  <a id="openExternalProduct" class="button secondary" href="#" target="_blank" rel="noreferrer">Open product</a>
+                </div>
+                <div class="muted" style="margin-top:10px;">This demo simulates the live recorded test experience inside the app. Real recording and centralized submission handling would come in the backend version.</div>
+              </div>
             </div>
           </div>
-          <div id="taskContainer" class="task-list"></div>
-          <div class="button-row">
-            <button id="submitResponse" class="button">Submit session</button>
-          </div>
-          <div class="muted">This demo stores fake/demo submissions in local browser storage so it can feel full without a backend.</div>
         </div>
 
         <div id="reviewView" class="panel stack hidden">
@@ -622,7 +800,18 @@ Describe what feels unclear before you hit publish.</textarea>
     const shareLink = document.getElementById('shareLink');
     const sampleList = document.getElementById('sampleList');
     const sampleNames = document.getElementById('sampleNames');
+    const browserUrl = document.getElementById('browserUrl');
+    const productFrame = document.getElementById('productFrame');
+    const fallbackOpenLink = document.getElementById('fallbackOpenLink');
+    const openExternalProduct = document.getElementById('openExternalProduct');
+    const recordingLabel = document.getElementById('recordingLabel');
+    const recordingTimer = document.getElementById('recordingTimer');
+    const recordToggle = document.getElementById('recordToggle');
+    const globalFeedback = document.getElementById('globalFeedback');
     const shareBase = `${window.location.origin}${window.location.pathname}`;
+    let recordingInterval = null;
+    let recordingSeconds = 0;
+    let isRecording = false;
 
     function setView(name) {
       Object.entries(views).forEach(([key, el]) => el.classList.toggle('hidden', key !== name));
@@ -642,6 +831,40 @@ Describe what feels unclear before you hit publish.</textarea>
       } catch {
         return null;
       }
+    }
+
+    function formatTimer(totalSeconds) {
+      const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
+      const seconds = String(totalSeconds % 60).padStart(2, '0');
+      return `${minutes}:${seconds}`;
+    }
+
+    function stopRecording(reset = false) {
+      isRecording = false;
+      clearInterval(recordingInterval);
+      recordingInterval = null;
+      recordToggle.textContent = 'Start recording';
+      recordingLabel.textContent = 'Not recording';
+      if (reset) {
+        recordingSeconds = 0;
+        recordingTimer.textContent = '00:00';
+      }
+    }
+
+    function startRecording() {
+      if (isRecording) return;
+      isRecording = true;
+      recordToggle.textContent = 'Stop recording';
+      recordingLabel.textContent = 'Recording live';
+      recordingInterval = window.setInterval(() => {
+        recordingSeconds += 1;
+        recordingTimer.textContent = formatTimer(recordingSeconds);
+      }, 1000);
+    }
+
+    function setRecordingState(nextState) {
+      if (nextState) startRecording();
+      else stopRecording(false);
     }
 
     function buildMissionFromForm() {
@@ -666,6 +889,7 @@ Describe what feels unclear before you hit publish.</textarea>
       document.getElementById('reward').value = mission.reward || '';
       document.getElementById('missionIntro').value = mission.intro || '';
       document.getElementById('taskList').value = (mission.tasks || []).join('\n');
+      globalFeedback.value = '';
       refreshShareLink();
       renderTestView(buildMissionFromForm());
     }
@@ -718,12 +942,17 @@ Describe what feels unclear before you hit publish.</textarea>
       document.getElementById('studyProduct').innerHTML = mission.productUrl
         ? `<a href="${mission.productUrl}" target="_blank" rel="noreferrer">${mission.productUrl}</a>`
         : 'No URL provided';
+      browserUrl.textContent = mission.productUrl || 'No URL provided';
+      productFrame.src = mission.productUrl || 'about:blank';
+      fallbackOpenLink.href = mission.productUrl || '#';
+      openExternalProduct.href = mission.productUrl || '#';
+      stopRecording(true);
 
       const taskContainer = document.getElementById('taskContainer');
       taskContainer.innerHTML = '';
       mission.tasks.forEach((task, index) => {
         const item = document.createElement('div');
-        item.className = `task-item${index === 0 ? ' active' : ''}`;
+        item.className = `task-item compact ${index === 0 ? 'current' : ''}`;
         item.innerHTML = `
           <div class="task-index">Task ${index + 1}</div>
           <div class="task-title">${task}</div>
@@ -740,6 +969,18 @@ Describe what feels unclear before you hit publish.</textarea>
         `;
         taskContainer.appendChild(item);
       });
+
+      taskContainer.querySelectorAll('textarea').forEach((textarea, index) => {
+        textarea.addEventListener('focus', () => {
+          taskContainer.querySelectorAll('.task-item').forEach((node, nodeIndex) => {
+            node.classList.toggle('current', nodeIndex === index);
+          });
+        });
+        textarea.addEventListener('input', () => {
+          const parent = textarea.closest('.task-item');
+          parent.classList.toggle('done', textarea.value.trim().length > 0);
+        });
+      });
     }
 
     function createSeedSubmission(mission, index) {
@@ -749,6 +990,8 @@ Describe what feels unclear before you hit publish.</textarea>
         cohort: mission.cohort,
         reward: mission.reward,
         submittedAt: `Seeded demo submission ${index + 1}`,
+        recordingDuration: `0${index % 5 + 2}:1${index % 4}`,
+        overallSummary: mission.fakeSubmission[mission.fakeSubmission.length - 1] || 'Seeded tester summary.',
         responses: mission.tasks.map((task, taskIndex) => ({
           task,
           note: mission.fakeSubmission[taskIndex] || 'Fake tester note.',
@@ -803,7 +1046,8 @@ Describe what feels unclear before you hit publish.</textarea>
             </div>
             <span class="pill">${item.responses.length} responses</span>
           </div>
-          <div class="muted">Audience: ${item.cohort || 'General audience'} • Reward: ${item.reward || 'N/A'}</div>
+          <div class="muted">Audience: ${item.cohort || 'General audience'} • Reward: ${item.reward || 'N/A'} • Recording: ${item.recordingDuration || '00:00'}</div>
+          ${item.overallSummary ? `<div class="divider"></div><div><strong>Overall summary</strong></div><div class="review-notes">${item.overallSummary}</div>` : ''}
           ${responsesHtml}
         `;
         reviewList.appendChild(node);
@@ -827,6 +1071,8 @@ Describe what feels unclear before you hit publish.</textarea>
         cohort: mission.cohort,
         reward: mission.reward,
         submittedAt: new Date().toLocaleString(),
+        recordingDuration: formatTimer(recordingSeconds),
+        overallSummary: globalFeedback.value.trim(),
         responses: notes
       };
     }
@@ -851,6 +1097,10 @@ Describe what feels unclear before you hit publish.</textarea>
       window.open(url, '_blank', 'noopener');
     });
 
+    recordToggle.addEventListener('click', () => {
+      setRecordingState(!isRecording);
+    });
+
     document.getElementById('submitResponse').addEventListener('click', () => {
       const missionParam = new URLSearchParams(window.location.search).get('mission');
       const mission = missionParam ? decodeMission(missionParam) : buildMissionFromForm();
@@ -858,6 +1108,7 @@ Describe what feels unclear before you hit publish.</textarea>
       const items = getStoredSubmissions();
       items.push(payload);
       saveStoredSubmissions(items);
+      stopRecording(true);
       renderReview();
       setView('review');
     });
