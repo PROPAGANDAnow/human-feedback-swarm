@@ -1,0 +1,828 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Human Feedback Swarm — Prototype</title>
+  <meta name="description" content="Prototype for a human-powered UX research swarm platform with rapid deployment, in-browser testing, verification, and incentives." />
+  <style>
+    :root {
+      --bg: #07111f;
+      --bg-soft: #0d1830;
+      --card: rgba(13, 24, 48, 0.78);
+      --card-strong: rgba(15, 26, 52, 0.95);
+      --text: #ecf2ff;
+      --muted: #9eb0d0;
+      --line: rgba(168, 190, 255, 0.18);
+      --accent: #7c9cff;
+      --accent-2: #5de4c7;
+      --accent-3: #ffc86b;
+      --danger: #ff7c7c;
+      --shadow: 0 30px 80px rgba(0, 0, 0, 0.38);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --max: 1240px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(124, 156, 255, 0.22), transparent 26%),
+        radial-gradient(circle at top right, rgba(93, 228, 199, 0.14), transparent 22%),
+        linear-gradient(180deg, #07111f 0%, #08101c 52%, #060b15 100%);
+      line-height: 1.45;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+    .shell { width: min(calc(100% - 32px), var(--max)); margin: 0 auto; }
+    .nav {
+      position: sticky; top: 0; z-index: 20;
+      backdrop-filter: blur(16px);
+      background: rgba(7, 17, 31, 0.72);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; padding: 16px 0;
+    }
+    .brand { display: flex; gap: 12px; align-items: center; font-weight: 700; letter-spacing: -0.03em; }
+    .brand-mark {
+      width: 36px; height: 36px; border-radius: 12px;
+      display: grid; place-items: center;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #08111f; font-weight: 900;
+      box-shadow: 0 12px 28px rgba(93, 228, 199, 0.24);
+    }
+    .nav-links { display: flex; gap: 18px; color: var(--muted); font-size: 14px; }
+    .nav-links a:hover { color: var(--text); }
+    .cta-row { display: flex; gap: 12px; align-items: center; }
+    .button {
+      border: 1px solid transparent;
+      background: linear-gradient(135deg, var(--accent), #8e6bff);
+      color: #07111f; padding: 12px 16px; border-radius: 999px;
+      font-weight: 700; cursor: pointer; transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease;
+      box-shadow: 0 18px 36px rgba(124, 156, 255, 0.24);
+    }
+    .button.secondary {
+      background: rgba(255,255,255,0.02); color: var(--text); border-color: var(--line); box-shadow: none;
+    }
+    .button:hover { transform: translateY(-1px); }
+    .hero { padding: 72px 0 44px; }
+    .hero-grid {
+      display: grid; grid-template-columns: 1.15fr 0.95fr; gap: 28px; align-items: stretch;
+    }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 12px; border: 1px solid var(--line); border-radius: 999px;
+      background: rgba(255,255,255,0.03); color: #cfe0ff; font-size: 13px;
+    }
+    h1 {
+      margin: 16px 0 18px; font-size: clamp(40px, 7vw, 74px);
+      line-height: 0.95; letter-spacing: -0.06em; max-width: 12ch;
+    }
+    .hero p {
+      margin: 0 0 24px; color: var(--muted); font-size: 18px; max-width: 60ch;
+    }
+    .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 26px; }
+    .stat {
+      padding: 18px; border-radius: var(--radius-md); border: 1px solid var(--line);
+      background: rgba(255,255,255,0.03);
+    }
+    .stat strong { display: block; font-size: 28px; letter-spacing: -0.05em; margin-bottom: 6px; }
+    .panel {
+      background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-xl);
+      box-shadow: var(--shadow); overflow: hidden;
+    }
+    .panel-head {
+      padding: 18px 20px; border-bottom: 1px solid var(--line);
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      background: rgba(255,255,255,0.02);
+    }
+    .dot-row { display: flex; gap: 8px; }
+    .dot { width: 10px; height: 10px; border-radius: 999px; background: rgba(255,255,255,0.28); }
+    .hero-card-body { padding: 20px; display: grid; gap: 18px; }
+    .flow-card {
+      display: grid; gap: 14px; padding: 16px; border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.08); background: rgba(5,8,16,0.34);
+    }
+    .mini-label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.14em; }
+    .flow-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 10px; border-radius: 999px; border: 1px solid var(--line);
+      background: rgba(124,156,255,0.08); color: #dbe6ff; font-size: 13px;
+    }
+    .meter { height: 10px; border-radius: 999px; background: rgba(255,255,255,0.08); overflow: hidden; }
+    .meter > span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
+    section { padding: 24px 0; }
+    .section-head { display: flex; justify-content: space-between; align-items: end; gap: 18px; margin-bottom: 20px; }
+    .section-head h2 { margin: 0; font-size: clamp(28px, 4vw, 44px); letter-spacing: -0.05em; }
+    .section-head p { margin: 0; max-width: 54ch; color: var(--muted); }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .card {
+      padding: 22px; border-radius: var(--radius-lg); background: var(--card);
+      border: 1px solid var(--line); box-shadow: var(--shadow);
+    }
+    .card h3 { margin: 0 0 8px; font-size: 19px; letter-spacing: -0.03em; }
+    .card p { margin: 0; color: var(--muted); }
+    .card ul { margin: 14px 0 0; padding-left: 18px; color: var(--muted); }
+    .workspace {
+      display: grid; grid-template-columns: 268px minmax(0, 1fr) 320px; gap: 18px;
+      align-items: start;
+    }
+    .sidebar, .stage, .drawer {
+      min-height: 580px;
+      background: var(--card); border: 1px solid var(--line);
+      border-radius: var(--radius-xl); box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .sidebar .head, .stage .head, .drawer .head {
+      padding: 18px 18px 16px; border-bottom: 1px solid var(--line);
+      display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    }
+    .sidebar-inner, .drawer-inner { padding: 18px; display: grid; gap: 14px; }
+    .side-group, .drawer-card {
+      padding: 16px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03);
+    }
+    .side-group h4, .drawer-card h4 { margin: 0 0 10px; font-size: 15px; }
+    .checklist { display: grid; gap: 8px; color: var(--muted); font-size: 14px; }
+    .checklist span::before { content: "✓"; color: var(--accent-2); margin-right: 10px; }
+    .stage-body { padding: 18px; display: grid; gap: 18px; }
+    .stage-browser {
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+      border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; overflow: hidden;
+    }
+    .browser-top { padding: 12px 14px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .browser-url {
+      flex: 1; min-width: 0; padding: 10px 12px; border-radius: 12px; background: rgba(255,255,255,0.05); color: #dfe7ff; font-size: 13px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .browser-canvas { padding: 16px; display: grid; gap: 16px; }
+    .product-top {
+      display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 16px;
+    }
+    .product-hero, .product-box {
+      border-radius: 18px; padding: 18px; border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(8, 14, 28, 0.7);
+    }
+    .product-hero h3 { margin: 0 0 8px; font-size: 28px; letter-spacing: -0.05em; }
+    .product-hero p, .product-box p { margin: 0; color: #b2c0dd; }
+    .bullet-list { display: grid; gap: 10px; margin-top: 18px; }
+    .bullet-list div {
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      padding: 12px 14px; border-radius: 14px; background: rgba(255,255,255,0.03);
+    }
+    .feedback-rail {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+    }
+    .feedback-note {
+      min-height: 120px; border-radius: 16px; padding: 14px; border: 1px dashed rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.03);
+    }
+    .feedback-note strong { display: block; margin-bottom: 8px; }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag { padding: 7px 10px; border-radius: 999px; font-size: 12px; border: 1px solid var(--line); color: #dbe6ff; }
+    .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .control-box {
+      padding: 18px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03);
+    }
+    .control-box label { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; color: #d7e4ff; margin-bottom: 10px; }
+    input[type="range"] { width: 100%; accent-color: var(--accent); }
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 14px; }
+    .kpi {
+      padding: 14px; border-radius: 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+    }
+    .kpi strong { display: block; font-size: 24px; letter-spacing: -0.04em; margin-bottom: 4px; }
+    .timeline { display: grid; gap: 14px; }
+    .timeline-step {
+      display: grid; grid-template-columns: 46px 1fr; gap: 14px; align-items: start;
+    }
+    .timeline-step .num {
+      width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center;
+      background: linear-gradient(135deg, rgba(124,156,255,0.18), rgba(93,228,199,0.18)); border: 1px solid var(--line); font-weight: 700;
+    }
+    .timeline-step h4 { margin: 0 0 6px; font-size: 16px; }
+    .timeline-step p { margin: 0; color: var(--muted); }
+    .footer {
+      padding: 36px 0 64px; color: var(--muted); font-size: 14px;
+    }
+    .footer-box {
+      padding: 20px; border-radius: 18px; border: 1px solid var(--line); background: rgba(255,255,255,0.03);
+      display: flex; justify-content: space-between; gap: 16px; align-items: center; flex-wrap: wrap;
+    }
+    .tabs { display: inline-flex; padding: 6px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,0.03); gap: 6px; }
+    .tab {
+      border: none; background: transparent; color: var(--muted); padding: 10px 14px; border-radius: 999px; cursor: pointer; font-weight: 600;
+    }
+    .tab.active { background: rgba(124,156,255,0.18); color: var(--text); }
+    .hidden { display: none !important; }
+    @media (max-width: 1080px) {
+      .hero-grid, .workspace, .product-top, .grid-3 { grid-template-columns: 1fr; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .feedback-rail, .controls, .stat-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+    @media (max-width: 720px) {
+      .hero { padding-top: 46px; }
+      h1 { max-width: 10ch; }
+      .section-head { align-items: start; flex-direction: column; }
+      .cta-row { width: 100%; flex-wrap: wrap; }
+      .button { width: 100%; justify-content: center; text-align: center; }
+      .kpi-grid { grid-template-columns: 1fr; }
+      .timeline-step { grid-template-columns: 38px 1fr; }
+      .timeline-step .num { width: 38px; height: 38px; border-radius: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="shell nav-inner">
+      <div class="brand">
+        <div class="brand-mark">H</div>
+        <div>
+          <div>Human Feedback Swarm</div>
+          <div style="font-size:12px;color:var(--muted);font-weight:500;">prototype from call notes</div>
+        </div>
+      </div>
+      <div class="nav-links">
+        <a href="#platform">Platform</a>
+        <a href="#workspace">Workspace</a>
+        <a href="#ops">Ops</a>
+        <a href="#launch">Launch</a>
+      </div>
+      <div class="cta-row">
+        <a class="button secondary" href="#workspace">Open prototype</a>
+        <a class="button" href="#launch">Launch swarm</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero shell">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">World ID verified testers • in-browser recording • human quality scores</div>
+        <h1>Deploy a product. Brief 100 humans. Get decision-ready feedback in hours.</h1>
+        <p>
+          A concept for running high-volume UX research with real people: recruit a swarm, route them through a browser-native testing flow,
+          verify authenticity with agents + identity checks, and turn raw clips into ranked product insight.
+        </p>
+        <div class="cta-row">
+          <a class="button" href="#workspace">See researcher workspace</a>
+          <a class="button secondary" href="#ops">Review trust & incentives</a>
+        </div>
+        <div class="stat-grid">
+          <div class="stat">
+            <strong>50–100</strong>
+            humans per deployment cohort
+          </div>
+          <div class="stat">
+            <strong>$5–$50</strong>
+            dynamic pay per verified session
+          </div>
+          <div class="stat">
+            <strong>1 flow</strong>
+            launch, observe, synthesize, export
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="mini-label">Concept snapshot</div>
+            <div style="font-weight:700; letter-spacing:-0.03em; margin-top:4px;">Cohort #024 — onboarding test</div>
+          </div>
+          <div class="dot-row"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+        </div>
+        <div class="hero-card-body">
+          <div class="flow-card">
+            <div class="flow-row">
+              <div>
+                <div class="mini-label">Recruitment</div>
+                <strong>83 testers accepted</strong>
+              </div>
+              <div class="pill">12 pro researchers • 71 general users</div>
+            </div>
+            <div class="meter"><span style="width:83%"></span></div>
+          </div>
+          <div class="flow-card">
+            <div class="flow-row">
+              <div>
+                <div class="mini-label">Verification</div>
+                <strong>Agent quality score: 92/100</strong>
+              </div>
+              <div class="pill">World ID + video + behavior</div>
+            </div>
+            <div class="meter"><span style="width:92%"></span></div>
+          </div>
+          <div class="flow-card">
+            <div class="flow-row">
+              <div>
+                <div class="mini-label">Insight output</div>
+                <strong>14 friction clusters found</strong>
+              </div>
+              <div class="pill">3 launch blockers</div>
+            </div>
+            <div class="meter"><span style="width:68%"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section id="platform">
+    <div class="shell">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Built from the meeting notes</div>
+          <h2>Four pillars of the platform</h2>
+        </div>
+        <p>
+          The concept centers on real humans, real product environments, and strong anti-gaming mechanisms — not synthetic tests or low-quality survey farms.
+        </p>
+      </div>
+      <div class="grid-3">
+        <div class="card">
+          <h3>1. Product-native testing</h3>
+          <p>Upload a staging URL or prototype and wrap it in a guided sidebar for tasks, prompts, and screenshots.</p>
+          <ul>
+            <li>In-browser screen capture</li>
+            <li>Task flows + timed checkpoints</li>
+            <li>Inline screenshot annotation</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>2. Human quality + trust</h3>
+          <p>Verify participants with identity, behavior, and agent review so reward dollars go to authentic sessions.</p>
+          <ul>
+            <li>World ID / sybil resistance</li>
+            <li>Quality scoring from agents</li>
+            <li>Optional camera / attention tier</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>3. Flexible incentive engine</h3>
+          <p>Pay more for stronger evidence, niche expertise, or richer modalities like camera-on walkthroughs.</p>
+          <ul>
+            <li>$5–$50 quality-based rewards</li>
+            <li>Credit rewards for trusted ecosystems</li>
+            <li>Reduced incentive farming</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="workspace">
+    <div class="shell">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Interactive workspace</div>
+          <h2>Prototype the operator view</h2>
+        </div>
+        <p>
+          Switch roles to see how the same system can serve a product team launching a study, a tester completing a task flow, and a reviewer validating quality.
+        </p>
+      </div>
+      <div style="margin-bottom:18px; display:flex; justify-content:flex-end;">
+        <div class="tabs" role="tablist" aria-label="Prototype roles">
+          <button class="tab active" data-tab="researcher">Researcher</button>
+          <button class="tab" data-tab="tester">Tester</button>
+          <button class="tab" data-tab="reviewer">Reviewer</button>
+        </div>
+      </div>
+      <div class="workspace">
+        <aside class="sidebar">
+          <div class="head">
+            <div>
+              <div class="mini-label">Study brief</div>
+              <strong id="briefTitle">Launch a 75-person onboarding swarm</strong>
+            </div>
+            <div class="pill" id="briefPill">Researcher mode</div>
+          </div>
+          <div class="sidebar-inner">
+            <div class="side-group">
+              <h4>Task parameters</h4>
+              <div class="checklist" id="taskChecklist">
+                <span>Upload staging URL + auth steps</span>
+                <span>Define 4 mission tasks</span>
+                <span>Target 60 normies + 15 pros</span>
+                <span>Set payout range and trust threshold</span>
+              </div>
+            </div>
+            <div class="side-group">
+              <h4>Trust stack</h4>
+              <div class="tag-row">
+                <div class="tag">World ID</div>
+                <div class="tag">Agent QA</div>
+                <div class="tag">Replay scoring</div>
+                <div class="tag">Camera optional</div>
+              </div>
+            </div>
+            <div class="side-group">
+              <h4>Reward logic</h4>
+              <p style="margin:0;color:var(--muted);font-size:14px;">Base reward plus confidence multipliers for depth, authenticity, and issue novelty.</p>
+            </div>
+          </div>
+        </aside>
+
+        <main class="stage">
+          <div class="head">
+            <div>
+              <div class="mini-label">In-browser product test</div>
+              <strong id="stageTitle">Researcher mission builder</strong>
+            </div>
+            <div class="pill" id="stagePill">Cohort ready in ~2h</div>
+          </div>
+          <div class="stage-body">
+            <div class="stage-browser">
+              <div class="browser-top">
+                <div class="dot-row"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+                <div class="browser-url" id="browserUrl">prototype.worldapp-rewards.dev/onboarding</div>
+              </div>
+              <div class="browser-canvas">
+                <div class="product-top">
+                  <div class="product-hero">
+                    <div class="mini-label">Mission center</div>
+                    <h3 id="canvasHeadline">Set up a swarm against your onboarding funnel</h3>
+                    <p id="canvasBody">Define instructions once, then fan them out to a balanced mix of mainstream users and professional researchers.</p>
+                    <div class="bullet-list" id="canvasBullets">
+                      <div><span>Pick participant mix</span><span class="tag">60 / 15 split</span></div>
+                      <div><span>Choose recording stack</span><span class="tag">screen + voice</span></div>
+                      <div><span>Set payout logic</span><span class="tag">$10–$28 dynamic</span></div>
+                    </div>
+                  </div>
+                  <div class="product-box">
+                    <div class="mini-label">Quality gate</div>
+                    <p id="qualityCopy">Only publish a session if the agent sees authentic navigation, coherent narration, and task completion evidence.</p>
+                    <div style="height:14px"></div>
+                    <div class="meter"><span id="qualityMeter" style="width:88%"></span></div>
+                    <div style="display:flex;justify-content:space-between;margin-top:10px;color:var(--muted);font-size:13px;">
+                      <span>Trust threshold</span>
+                      <span id="qualityValue">88 / 100</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="feedback-rail" id="feedbackRail">
+                  <div class="feedback-note">
+                    <strong>Drop-off moment</strong>
+                    Users pause on wallet connection and ask if funds can be lost.
+                  </div>
+                  <div class="feedback-note">
+                    <strong>Pain point screenshot</strong>
+                    Annotated modal highlights confusion around permissions language.
+                  </div>
+                  <div class="feedback-note">
+                    <strong>Surprising positive</strong>
+                    Users trust the progress bar and continue once expectations are clear.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="controls">
+              <div class="control-box">
+                <label for="cohortRange">
+                  <span>Cohort size</span>
+                  <strong id="cohortOutput">75 testers</strong>
+                </label>
+                <input id="cohortRange" type="range" min="50" max="100" step="5" value="75" />
+                <div style="display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin-top:8px;">
+                  <span>50</span><span>100</span>
+                </div>
+              </div>
+              <div class="control-box">
+                <label for="payoutRange">
+                  <span>Average payout</span>
+                  <strong id="payoutOutput">$18 avg</strong>
+                </label>
+                <input id="payoutRange" type="range" min="5" max="50" step="1" value="18" />
+                <div style="display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin-top:8px;">
+                  <span>$5</span><span>$50</span>
+                </div>
+              </div>
+            </div>
+            <div class="kpi-grid">
+              <div class="kpi"><strong id="costEstimate">$1,350</strong>Estimated incentive pool</div>
+              <div class="kpi"><strong>2h</strong>Time to fill first cohort</div>
+              <div class="kpi"><strong>14</strong>Issue clusters auto-grouped</div>
+              <div class="kpi"><strong>3</strong>Launch blockers escalated</div>
+            </div>
+          </div>
+        </main>
+
+        <aside class="drawer">
+          <div class="head">
+            <div>
+              <div class="mini-label">Operations drawer</div>
+              <strong id="drawerTitle">Auto-synthesis + export</strong>
+            </div>
+            <div class="pill" id="drawerPill">PM-ready</div>
+          </div>
+          <div class="drawer-inner">
+            <div class="drawer-card">
+              <h4 id="drawerCardTitle">What ships to the team</h4>
+              <div class="timeline" id="drawerTimeline">
+                <div class="timeline-step">
+                  <div class="num">1</div>
+                  <div>
+                    <h4>Cluster evidence</h4>
+                    <p>Group clips, screenshots, and quotes around friction themes automatically.</p>
+                  </div>
+                </div>
+                <div class="timeline-step">
+                  <div class="num">2</div>
+                  <div>
+                    <h4>Score severity</h4>
+                    <p>Rank blockers by prevalence, confidence, and revenue / activation impact.</p>
+                  </div>
+                </div>
+                <div class="timeline-step">
+                  <div class="num">3</div>
+                  <div>
+                    <h4>Export action plan</h4>
+                    <p>Push top findings into tickets, launch docs, or stakeholder briefs.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="drawer-card">
+              <h4>Why this is differentiated</h4>
+              <p style="margin:0;color:var(--muted);font-size:14px;">This is not just another survey tool — it combines product-native tasks, verified humans, dynamic incentives, and decision-ready synthesis.</p>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section id="ops">
+    <div class="shell">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Trust, incentives, supply</div>
+          <h2>Design the economics so quality wins</h2>
+        </div>
+        <p>
+          The notes emphasized avoiding low-effort farming. The prototype therefore models a quality-weighted payout system with optional higher-value modalities.
+        </p>
+      </div>
+      <div class="grid-3">
+        <div class="card">
+          <h3>Identity + sybil resistance</h3>
+          <p>World ID or equivalent identity rails reduce duplicate accounts, fake cohorts, and resold sessions.</p>
+        </div>
+        <div class="card">
+          <h3>Agent-based authenticity checks</h3>
+          <p>Replay the browser session, parse the narration, and compare evidence quality before finalizing payment.</p>
+        </div>
+        <div class="card">
+          <h3>Tiered incentives</h3>
+          <p>Reward richer evidence with higher payout: screen-only, screen + voice, camera-on, or specialist review.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="launch">
+    <div class="shell">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Prototype scope</div>
+          <h2>Suggested next build steps</h2>
+        </div>
+        <p>
+          This prototype is a product story and interaction concept. The next iteration should connect real flows: auth, mission creation, capture, verification, and export.
+        </p>
+      </div>
+      <div class="grid-3">
+        <div class="card">
+          <h3>Phase 1</h3>
+          <p>Ship a real mission builder + tester session with screen capture, screenshot annotation, and proof-of-task completion.</p>
+        </div>
+        <div class="card">
+          <h3>Phase 2</h3>
+          <p>Add identity verification, payout orchestration, and basic agent QA scoring for anti-gaming.</p>
+        </div>
+        <div class="card">
+          <h3>Phase 3</h3>
+          <p>Turn raw evidence into clustered findings and export directly into PM / GitHub / Linear workflows.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer shell">
+    <div class="footer-box">
+      <div>
+        <strong style="display:block;color:var(--text);margin-bottom:6px;">Rapid prototype assembled from call notes</strong>
+        <span>Focus: human UX research at scale, browser-native capture, trust, incentives, and synthesis.</span>
+      </div>
+      <a class="button" href="#workspace">Back to interactive workspace</a>
+    </div>
+  </footer>
+
+  <script>
+    const tabs = document.querySelectorAll('.tab');
+    const cohortRange = document.getElementById('cohortRange');
+    const payoutRange = document.getElementById('payoutRange');
+    const cohortOutput = document.getElementById('cohortOutput');
+    const payoutOutput = document.getElementById('payoutOutput');
+    const costEstimate = document.getElementById('costEstimate');
+
+    const dom = {
+      briefTitle: document.getElementById('briefTitle'),
+      briefPill: document.getElementById('briefPill'),
+      taskChecklist: document.getElementById('taskChecklist'),
+      stageTitle: document.getElementById('stageTitle'),
+      stagePill: document.getElementById('stagePill'),
+      browserUrl: document.getElementById('browserUrl'),
+      canvasHeadline: document.getElementById('canvasHeadline'),
+      canvasBody: document.getElementById('canvasBody'),
+      canvasBullets: document.getElementById('canvasBullets'),
+      qualityCopy: document.getElementById('qualityCopy'),
+      qualityMeter: document.getElementById('qualityMeter'),
+      qualityValue: document.getElementById('qualityValue'),
+      feedbackRail: document.getElementById('feedbackRail'),
+      drawerTitle: document.getElementById('drawerTitle'),
+      drawerPill: document.getElementById('drawerPill'),
+      drawerCardTitle: document.getElementById('drawerCardTitle'),
+      drawerTimeline: document.getElementById('drawerTimeline')
+    };
+
+    const views = {
+      researcher: {
+        briefTitle: 'Launch a 75-person onboarding swarm',
+        briefPill: 'Researcher mode',
+        taskChecklist: [
+          'Upload staging URL + auth steps',
+          'Define 4 mission tasks',
+          'Target 60 normies + 15 pros',
+          'Set payout range and trust threshold'
+        ],
+        stageTitle: 'Researcher mission builder',
+        stagePill: 'Cohort ready in ~2h',
+        browserUrl: 'prototype.worldapp-rewards.dev/onboarding',
+        canvasHeadline: 'Set up a swarm against your onboarding funnel',
+        canvasBody: 'Define instructions once, then fan them out to a balanced mix of mainstream users and professional researchers.',
+        canvasBullets: [
+          ['Pick participant mix', '60 / 15 split'],
+          ['Choose recording stack', 'screen + voice'],
+          ['Set payout logic', '$10–$28 dynamic']
+        ],
+        qualityCopy: 'Only publish a session if the agent sees authentic navigation, coherent narration, and task completion evidence.',
+        qualityValue: 88,
+        feedbackRail: [
+          ['Drop-off moment', 'Users pause on wallet connection and ask if funds can be lost.'],
+          ['Pain point screenshot', 'Annotated modal highlights confusion around permissions language.'],
+          ['Surprising positive', 'Users trust the progress bar and continue once expectations are clear.']
+        ],
+        drawerTitle: 'Auto-synthesis + export',
+        drawerPill: 'PM-ready',
+        drawerCardTitle: 'What ships to the team',
+        timeline: [
+          ['Cluster evidence', 'Group clips, screenshots, and quotes around friction themes automatically.'],
+          ['Score severity', 'Rank blockers by prevalence, confidence, and revenue / activation impact.'],
+          ['Export action plan', 'Push top findings into tickets, launch docs, or stakeholder briefs.']
+        ]
+      },
+      tester: {
+        briefTitle: 'Complete your mission and earn more for better evidence',
+        briefPill: 'Tester mode',
+        taskChecklist: [
+          'Record your screen while thinking out loud',
+          'Take screenshots on confusing moments',
+          'Opt into camera-on tier for bonus pay',
+          'Submit final confidence rating + summary'
+        ],
+        stageTitle: 'Tester guided session',
+        stagePill: 'Earn up to $32',
+        browserUrl: 'tester.human-feedback-swarm.app/session/024',
+        canvasHeadline: 'Try the onboarding flow and narrate where you hesitate',
+        canvasBody: 'The sidebar keeps the mission clear while the product stays live in the same browser frame — no software installs required.',
+        canvasBullets: [
+          ['Task 1', 'Create account'],
+          ['Task 2', 'Connect wallet'],
+          ['Task 3', 'Explain what feels risky'],
+          ['Bonus', 'Camera-on attention tier']
+        ],
+        qualityCopy: 'You get higher payout when your session shows concrete actions, clear narration, and useful annotations tied to the mission.',
+        qualityValue: 94,
+        feedbackRail: [
+          ['Live annotation', '“This permission screen feels scary — I do not know what I am approving.”'],
+          ['Voice note', '“I expected a simpler explanation before connecting.”'],
+          ['Reward meter', 'Depth bonus unlocked from detailed screenshot + clear spoken rationale.']
+        ],
+        drawerTitle: 'Payout + trust summary',
+        drawerPill: 'Verified human',
+        drawerCardTitle: 'How payout is decided',
+        timeline: [
+          ['Identity confirmed', 'World ID or equivalent prevents duplicate or outsourced sessions.'],
+          ['Evidence reviewed', 'The agent checks navigation, voice coherence, and annotation quality.'],
+          ['Reward finalized', 'Base pay plus bonuses for clarity, novelty, and richer modalities.']
+        ]
+      },
+      reviewer: {
+        briefTitle: 'Review sessions and suppress low-quality submissions',
+        briefPill: 'Reviewer mode',
+        taskChecklist: [
+          'Inspect replay + event timeline',
+          'Compare narration to observed behavior',
+          'Approve, flag, or route for manual review',
+          'Escalate novel insights into theme clusters'
+        ],
+        stageTitle: 'Agent-assisted QA console',
+        stagePill: '17 sessions waiting',
+        browserUrl: 'ops.human-feedback-swarm.app/review/queue',
+        canvasHeadline: 'Triage quality before feedback hits the research report',
+        canvasBody: 'Reviewer tools focus on authenticity, consistency, and novelty so the platform can scale without becoming a low-trust labor market.',
+        canvasBullets: [
+          ['Session integrity', 'mouse + scroll replay'],
+          ['Narration quality', 'coherent / generic'],
+          ['Identity health', 'sybil risk: low'],
+          ['Decision', 'approve / flag / reject']
+        ],
+        qualityCopy: 'The platform combines agent scoring with human override so suspicious or shallow sessions do not pollute the final insight layer.',
+        qualityValue: 91,
+        feedbackRail: [
+          ['Flagged issue', 'Session uses generic filler language not tied to product actions.'],
+          ['Novel finding', 'Only 6% of testers mention this billing concern, but it strongly predicts abandonment.'],
+          ['Escalation', 'Queue for manual review because face video and narration disagree.']
+        ],
+        drawerTitle: 'Trust operations console',
+        drawerPill: 'Fraud-resistant',
+        drawerCardTitle: 'How the review loop scales',
+        timeline: [
+          ['Pre-score automatically', 'Every session gets a trust score before entering the queue.'],
+          ['Route exceptions', 'Only edge cases or high-value findings require human review.'],
+          ['Update payout + model', 'Reviewer actions improve future scoring and tighten incentives.']
+        ]
+      }
+    };
+
+    function renderBullets(items) {
+      dom.canvasBullets.innerHTML = items.map(([label, tag]) => `<div><span>${label}</span><span class="tag">${tag}</span></div>`).join('');
+    }
+
+    function renderFeedback(items) {
+      dom.feedbackRail.innerHTML = items.map(([title, body]) => `<div class="feedback-note"><strong>${title}</strong>${body}</div>`).join('');
+    }
+
+    function renderChecklist(items) {
+      dom.taskChecklist.innerHTML = items.map(item => `<span>${item}</span>`).join('');
+    }
+
+    function renderTimeline(items) {
+      dom.drawerTimeline.innerHTML = items.map((item, index) => `
+        <div class="timeline-step">
+          <div class="num">${index + 1}</div>
+          <div>
+            <h4>${item[0]}</h4>
+            <p>${item[1]}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function applyView(key) {
+      const view = views[key];
+      tabs.forEach(tab => tab.classList.toggle('active', tab.dataset.tab === key));
+      dom.briefTitle.textContent = view.briefTitle;
+      dom.briefPill.textContent = view.briefPill;
+      renderChecklist(view.taskChecklist);
+      dom.stageTitle.textContent = view.stageTitle;
+      dom.stagePill.textContent = view.stagePill;
+      dom.browserUrl.textContent = view.browserUrl;
+      dom.canvasHeadline.textContent = view.canvasHeadline;
+      dom.canvasBody.textContent = view.canvasBody;
+      renderBullets(view.canvasBullets);
+      dom.qualityCopy.textContent = view.qualityCopy;
+      dom.qualityValue.textContent = `${view.qualityValue} / 100`;
+      dom.qualityMeter.style.width = `${view.qualityValue}%`;
+      renderFeedback(view.feedbackRail);
+      dom.drawerTitle.textContent = view.drawerTitle;
+      dom.drawerPill.textContent = view.drawerPill;
+      dom.drawerCardTitle.textContent = view.drawerCardTitle;
+      renderTimeline(view.timeline);
+    }
+
+    function updateEconomics() {
+      const cohort = Number(cohortRange.value);
+      const payout = Number(payoutRange.value);
+      cohortOutput.textContent = `${cohort} testers`;
+      payoutOutput.textContent = `$${payout} avg`;
+      costEstimate.textContent = `$${(cohort * payout).toLocaleString()}`;
+    }
+
+    tabs.forEach(tab => tab.addEventListener('click', () => applyView(tab.dataset.tab)));
+    cohortRange.addEventListener('input', updateEconomics);
+    payoutRange.addEventListener('input', updateEconomics);
+
+    applyView('researcher');
+    updateEconomics();
+  </script>
+</body>
+</html>
